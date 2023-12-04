@@ -40,7 +40,6 @@ def divide_into_regions(_lbp, _region_size):
 
 # Method to normalize LBP histogram ###################
 def normalize_histogram(_histogram):
-
     return _histogram / np.sum(_histogram)
 #######################################################
 
@@ -52,6 +51,21 @@ def threshold_histogram(_histogram, _threshold_factor):
     _histogram[_histogram >= threshold] = 1
     return _histogram
 #######################################################
+
+
+# Method to normalize LBP feature map/LBP image ##########
+def normalize_lbp_image(lbp_image, new_min=0, new_max=255):
+    min_val = np.min(lbp_image)
+    max_val = np.max(lbp_image)
+
+    # Avoiding zero division
+    if min_val == max_val:
+        return np.full_like(lbp_image, new_min)
+
+    normalized_image = ((lbp_image - min_val) / (max_val - min_val)) * (new_max - new_min) + new_min
+    return normalized_image.astype(np.uint8)
+
+##########################################################
 
 
 # Main function #######################################
@@ -91,6 +105,7 @@ if __name__=="__main__":
     lbp_images= []
     for gray in gray_images:
         lbp = local_binary_pattern(gray, n_points, radius, method='uniform')
+        lbp = normalize_lbp_image(lbp)
         lbp_images.append(lbp)
 
     cv2.imshow('lbp image', lbp_images[0])
@@ -124,8 +139,4 @@ if __name__=="__main__":
 
     y_pred = model.predict(X_test)
     print('\n', y_pred, "\n")
-    ########################################################################
-
-
-# Normalize within range
-# Remove Filter
+    ########################################################################    
