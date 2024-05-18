@@ -145,156 +145,21 @@ if __name__=="__main__":
     # features=features.flatten()
     X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
 
-    # vectorization = TfidfVectorizer()
-    # xv_train= vectorization.fit_transform(X_train)
-    # xv_test= vectorization.fit_transform(X_test)
-
     # classifier = make_pipeline(StandardScaler(), SimpleImputer(strategy='mean'), SVC(kernel='linear', C=1.0))
     # classifier = make_pipeline(StandardScaler(), SimpleImputer(strategy='mean'), RandomForestClassifier(n_estimators=100, random_state=42))
     # classifier = make_pipeline(StandardScaler(), SimpleImputer(strategy='mean'), MLPClassifier(hidden_layer_sizes=(100, 100), max_iter=1000, random_state=42))
     # classifier = make_pipeline(StandardScaler(), SimpleImputer(strategy='mean'), KNeighborsClassifier(n_neighbors=3))
     classifier= OneVsRestClassifier(svm.SVC())
 
-    # param_grid = {'svc__C': [0.001, 0.01, 0.1, 1, 10, 100]}  #parameter grid for grid search
-
-    # grid_search = GridSearchCV(classifier, param_grid, cv=5, n_jobs=-1)  #grid search with cross validation
-    # grid_search.fit(X_train, y_train)
-
-    # print("Best parameters:", grid_search.best_params_)
-
-    # best_classifer = grid_search.best_estimator_
-
     classifier.fit(X_train, y_train)
 
     y_pred = classifier.predict(X_test)
-    # print("Predictions for Test set: ", y_pred) ####################################################################
-    # y_pred= best_classifer.predict(X_test)
 
     accuracy = accuracy_score(y_test, y_pred)
     print(f"\nAccuracy on the test set: {accuracy * 100:.2f}%") ##########################################################
     print("\nPrecision: ", precision_score(y_test, y_pred, average="weighted") * 100, "%")
     print("\nRecall: ", recall_score(y_test, y_pred, average="weighted") * 100, "%")
     print("\nF1 Score: ", f1_score(y_test, y_pred, average="weighted") * 100, "%")
-
-    # X5_path = os.path.join(texture_directory, 'OASIS_Cross_gallery_converted')
-    # X5_features = []
-    # X5_labels = []
-
-    # for filename in os.listdir(X5_path):
-    #     if filename.endswith('.jpg'):
-    #         image_path = os.path.join(X5_path, filename)
-    #         feature = extract_features(image_path, threshold_factor)
-    #         X5_features.append(feature)
-
-    # sequences = [
-    # (1, 137),
-    # (2, 118),
-    # (3, 91),
-    # (4, 70)
-    # ]
-
-    # for sequence_number, sequence_length in sequences:
-    #     X5_labels.extend([sequence_number] * sequence_length)
-
-    # # print("True values for X5 textures:", X5_labels)
-    # X5_predictions = classifier.predict(X5_features)
-    # print("Predictions for X5 textures:", X5_predictions)
-
-    # accuracy = accuracy_score(X5_labels, X5_predictions)
-    # print(f"Accuracy on the X5 set: {accuracy * 100:.2f}%")
     
 
 #####################################################################################################################################
-
-
-########################## Main function FOR BRODATZ DATASET ############################################################
-# if __name__=="__main__":
-
-#     dataset_path=  "assets/textures/"
-#     images= []
-#     for filename in os.listdir(dataset_path):
-#         img= cv2.imread(os.path.join(dataset_path, filename))
-#         # img= cv2.resize(img, dimensions)
-#         images.append(img)
-
-#     cv2.imshow('original image', images[0])
-#     # displaying original image for reference
-
-
-#     ############ Grayscaling & converting image to NxM graylevel array #########
-#     gray_images= []
-#     for img in images:
-#         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-#         gray_images.append(gray)
-
-#     cv2.imshow('grayscale image', gray_images[0])
-#     ###########################################################################
-
-#     ######## Filtering grayscale image to further smoothen image ##############
-#     filtered_images=[]
-#     for gray in gray_images:
-#         filtered= cv2.medianBlur(gray, 5)
-#         filtered_images.append(filtered)
-
-#     cv2.imshow('filtered image', filtered_images[0])
-#     ###########################################################################
-
-
-#     ## Extracting LBP features from Grayscale image & storing in feature map ##
-#     lbp_images= []
-#     for gray in gray_images:
-#         lbp = local_binary_pattern(gray, n_points, radius, method='uniform')
-#         lbp = normalize_lbp_image(lbp)
-#         lbp_images.append(lbp)
-
-#     lbp_images_th= []
-#     for filtered in filtered_images:
-#         lbp_th = local_binary_pattern(filtered, n_points, radius, method='uniform')
-#         lbp_th = normalize_lbp_image(lbp_th)
-#         lbp_images_th.append(lbp_th)
-
-#     cv2.imshow('lbp image', lbp_images[0])
-#     # cv2.waitKey(0)
-#     # cv2.destroyAllWindows()
-#     ##########################################################################
-
-#     ##### Further thresholding based on a threshold factor ###################
-#     thresholded_images= []
-#     for lbp in lbp_images:
-#         regions= divide_into_regions(lbp, region_size)
-#         thresholded_regions= []
-#         for region in regions:
-#             histogram, _= np.histogram(region, bins=np.arange(0, 10), density=True)
-#             histogram = threshold_histogram(histogram, threshold_factor)
-#             thresholded_regions.append(histogram)
-#         thresholded_image= np.concatenate(thresholded_regions)
-#         thresholded_images.append(thresholded_image)
-#     thresholded_images= np.array(thresholded_images)
-
-#     cv2.imshow('thresholded lbp image', lbp_images_th[0])
-#     cv2.waitKey(0)
-#     cv2.destroyAllWindows()
-#     ########################################################################
-
-
-
-
-#     # Labelling & Training & Testing
-#     data= pd.read_excel('C:/Users/HP/Desktop/Python_AI/lbp-descriptor-textureRecog/Labels.xlsx')
-
-#     y= label_binarize(data['Label'], classes=["irregular", "regular"])
-#     X_train, X_test, y_train, y_test= train_test_split(data['File'], y, test_size=0.15, random_state=35)
-
-#     vectorization = TfidfVectorizer()
-#     xv_train = vectorization.fit_transform(X_train)
-#     xv_test = vectorization.transform(X_test)
-
-#     model_gini = OneVsRestClassifier(svm.SVC())
-#     model_gini.fit(xv_train, y_train)
-#     y_pred = model_gini.predict(xv_test)
-
-#     print("\nAccuracy Score: ", accuracy_score(y_test, y_pred) * 100, "%")
-#     print("\nPrecision: ", precision_score(y_test, y_pred, average="weighted") * 100, "%")
-#     print("\nRecall: ", recall_score(y_test, y_pred, average="weighted") * 100, "%")
-#     print("\nF1 Score: ", f1_score(y_test, y_pred, average="weighted") * 100, "%")
-######################################################################################################################3  
