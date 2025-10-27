@@ -96,13 +96,6 @@ def extract_features(image_path, threshold_factor):
     # lbp = normalize_lbp_image(lbp)
     # lbp = np.ravel(lbp)
 
-    ##### overall thresholding (non-regional)
-    # variance = cv2.GaussianBlur(lbp, (normalization_radius, normalization_radius), 0)
-    # variance = np.var(variance)
-    # normalized_lbp = (lbp - np.mean(lbp)) / max(np.sqrt(variance), 1)
-    # thresholded_lbp= np.where(normalized_lbp>=(np.mean(normalized_lbp)), 1, 0)
-    # lbp_histogram, _= np.histogram(thresholded_lbp, bins=np.arange(0, 3**n_points+1), density=True)
-
 
     ##### region-based thresholding
     regions= divide_into_regions(lbp, region_size)

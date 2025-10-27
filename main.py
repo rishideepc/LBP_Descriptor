@@ -155,15 +155,6 @@ if __name__=="__main__":
     # classifier = make_pipeline(StandardScaler(), SimpleImputer(strategy='mean'), KNeighborsClassifier(n_neighbors=3))
     classifier= OneVsRestClassifier(svm.SVC())
 
-    # param_grid = {'svc__C': [0.001, 0.01, 0.1, 1, 10, 100]}  #parameter grid for grid search
-
-    # grid_search = GridSearchCV(classifier, param_grid, cv=5, n_jobs=-1)  #grid search with cross validation
-    # grid_search.fit(X_train, y_train)
-
-    # print("Best parameters:", grid_search.best_params_)
-
-    # best_classifer = grid_search.best_estimator_
-
     classifier.fit(X_train, y_train)
 
     y_pred = classifier.predict(X_test)
@@ -176,32 +167,6 @@ if __name__=="__main__":
     print("\nRecall: ", recall_score(y_test, y_pred, average="weighted") * 100, "%")
     print("\nF1 Score: ", f1_score(y_test, y_pred, average="weighted") * 100, "%")
 
-    # X5_path = os.path.join(texture_directory, 'OASIS_Cross_gallery_converted')
-    # X5_features = []
-    # X5_labels = []
-
-    # for filename in os.listdir(X5_path):
-    #     if filename.endswith('.jpg'):
-    #         image_path = os.path.join(X5_path, filename)
-    #         feature = extract_features(image_path, threshold_factor)
-    #         X5_features.append(feature)
-
-    # sequences = [
-    # (1, 137),
-    # (2, 118),
-    # (3, 91),
-    # (4, 70)
-    # ]
-
-    # for sequence_number, sequence_length in sequences:
-    #     X5_labels.extend([sequence_number] * sequence_length)
-
-    # # print("True values for X5 textures:", X5_labels)
-    # X5_predictions = classifier.predict(X5_features)
-    # print("Predictions for X5 textures:", X5_predictions)
-
-    # accuracy = accuracy_score(X5_labels, X5_predictions)
-    # print(f"Accuracy on the X5 set: {accuracy * 100:.2f}%")
     
 
 #####################################################################################################################################
